@@ -1,0 +1,50 @@
+---
+- name: testing for a
+  hosts: localhost
+  gather_facts: False
+  connection: local
+  vars:
+    a: a exists!
+  tasks:
+    - debug:
+        msg: "{{ a|default(inventory_hostname|extract(hostvars, ['b', 'c', 'd', 'e'])) }}"
+
+- name: testing for b: this should work, it doesn't
+  hosts: localhost
+  gather_facts: False
+  connection: local
+  vars:
+    b: 
+      c:
+        d:
+          e: 'bcde exists!'
+  tasks:
+    - debug:
+        msg: "{{ a|default(inventory_hostname|extract(hostvars, ['b', 'c', 'd', 'e'])) }}"
+
+- name: testing for b: this works - but uses unoffically exposed 'vars'
+  hosts: localhost
+  gather_facts: False
+  connection: local
+  vars:
+    b: 
+      c:
+        d:
+          e: 'bcde exists!'
+  tasks:
+    - debug:
+        msg: "{{ a|default('b'|extract(vars, ['c', 'd', 'e'])) }}"
+
+- name: testing for b: this works
+  hosts: localhost
+  gather_facts: False
+  connection: local
+  tasks:
+    - set_fact:
+        b: 
+          c:
+            d:
+              e: 'bcde exists!'
+
+    - debug:
+msg: "{{ a|default(inventory_hostname|extract(hostvars, ['b', 'c', 'd', 'e'])) }}"

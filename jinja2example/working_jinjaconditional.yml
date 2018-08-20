@@ -1,0 +1,10 @@
+---
+- name: Sample Conditional Logic
+  user: root
+  hosts: all
+  vars:
+    hello: true
+    say_something: "{% if hello == true%} Hello Jinja {% else %} GoodBye Ansible {% endif %}"
+  tasks:
+   - debug:
+       msg: "{{say_something }}"

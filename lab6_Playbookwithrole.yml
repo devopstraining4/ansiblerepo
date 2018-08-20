@@ -1,0 +1,18 @@
+---
+- hosts: linuxservers
+  tasks:
+    - name: Install Apache Web Server
+      yum: name=httpd state=latest
+      notify:
+        - openport
+        - startwebserver
+  handlers:
+    - name: openport
+      service: name=httpd state=started
+    - name: startwebserver
+      firewalld: port=80/tcp permanent=true state=enabled immediate=yes
+
+- hosts: ansibleclient2
+  tasks:
+    - name: upload index page
+      get_url: url=http://diyatechnologies.com/online-training.html dest=/var/www/html/index.html

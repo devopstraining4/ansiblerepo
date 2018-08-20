@@ -1,0 +1,9 @@
+# Example playbook using simple JINJA2 variable substitution
+--
+- hosts: 192.168.198.136
+user: root
+vars:
+motd: 'Welcome to your Linux Box'
+tasks:
+- name: Update the /etc/motd
+copy: content='{{motd}}' dest='/opt/motd' force='yes'
